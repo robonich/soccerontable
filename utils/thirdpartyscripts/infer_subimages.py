@@ -48,7 +48,6 @@ import utils.logging
 import utils.vis as vis_utils
 import pycocotools.mask as mask_util
 
-
 c2_utils.import_detectron_ops()
 # OpenCL may be enabled by default in OpenCV3; disable it because it's not
 # thread safe and causes unwanted GPU memory allocations.
@@ -100,7 +99,7 @@ def main(args):
     cfg.TEST.WEIGHTS = args.weights
     cfg.NUM_GPUS = 1
     assert_and_infer_cfg()
-    model = infer_engine.initialize_model_from_cfg()
+    model = infer_engine.initialize_model_from_cfg(args.weights)
     dummy_coco_dataset = dummy_datasets.get_coco_dataset()
 
     if os.path.isdir(args.im_or_folder):
@@ -108,7 +107,7 @@ def main(args):
     else:
         im_list = [args.im_or_folder]
 
-    for ii, im_name in enumerate(im_list):
+    for i, im_name in enumerate(im_list):
         out_name = os.path.join(
             args.output_dir, '{}'.format(os.path.basename(im_name) + '.pdf')
         )
@@ -214,6 +213,6 @@ def main(args):
 
 if __name__ == '__main__':
     workspace.GlobalInit(['caffe2', '--caffe2_log_level=0'])
-    utils.logging.setup_logging(__name__)
+    detectron.utils.logging.setup_logging(__name__)
     args = parse_args()
     main(args)
