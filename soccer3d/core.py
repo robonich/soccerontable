@@ -251,7 +251,7 @@ class YoutubeVideo:
 
                 cwd = os.getcwd()
                 os.chdir(openpose_dir)
-                command = '{0} --model_pose COCO --image_dir {1} --write_keypoint {2} --no_display'.format(openposebin,
+                command = '{0} --model_pose COCO --image_dir {1} --write_keypoint {2} --display 0 --render_pose 0'.format(openposebin,
                                                                                                            tmp_dir,
                                                                                                            tmp_dir)
 
@@ -269,9 +269,9 @@ class YoutubeVideo:
                             _ = data_file.readline()
                         data_yml = yaml.load(data_file)
 
-                        if 'sizes' not in data_yml:
+                        if 'rows' not in data_yml:
                             continue
-                        sz = data_yml['sizes']
+                        sz = (data_yml['rows'], data_yml['cols'], -1)
                         n_persons = sz[0]
                         keypoints = np.array(data_yml['data']).reshape(sz)
 
